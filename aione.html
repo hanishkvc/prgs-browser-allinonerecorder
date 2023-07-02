@@ -26,9 +26,12 @@
                 let brs = document.getElementById("RecScr")
                 brs.onclick = start_rs
                 let brd = document.getElementById("RecDev")
-                let brstop = document.getElementById("RecStop")                
+                brd.onclick = start_rd
+                let brstop = document.getElementById("RecStop")
+                brstop.onclick = stop_rec
+                console.log("INFO:Init:Setup UI...")
             }
-            document.onload = init
+            window.onload = init
         </script>
     </body>
 </html>
