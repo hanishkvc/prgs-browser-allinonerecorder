@@ -23,6 +23,7 @@
             let mediaFileCnt = 0
             let dl = null
             let elStatus = null
+            let startDateTime = 3210
 
             function got_data(be) {
                 mediaChunks.push(be.data)
@@ -38,6 +39,7 @@
                     mediaRec = new MediaRecorder(stream)
                     mediaRec.ondataavailable = got_data
                     mediaRec.start(DATACHUNK_MS)
+                    startDateTime = Date.now()
             }
 
             function start_rs(params) {
@@ -73,7 +75,7 @@
                     }
                     dl = document.createElement('a')
                     dl.id = "SaveLink"
-                    dl.setAttribute('download', `captured_${mediaFileCnt}`)
+                    dl.setAttribute('download', `captured_${startDateTime}_${mediaFileCnt}`)
                     dl.href = fileData
                     dl.innerHTML = "Save captured media"
                     window.document.body.appendChild(dl)
