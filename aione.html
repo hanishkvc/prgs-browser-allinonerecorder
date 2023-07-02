@@ -5,7 +5,7 @@
     <body>
         <h1>All in One Recorder</h1>
         <author>HanishKVC</author>
-        <version>v20230702IST2249</version>
+        <version>v20230702IST2255</version>
         <p>
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
@@ -26,12 +26,13 @@
             let elStatus = null
             let startDateTime = 3210
             let saveChunks = false
+            let recType = "???"
 
             function got_data(be) {
                 mediaChunks.push(be.data)
                 dataChunkCnt += 1
                 console.log("INFO:GotData:", dataChunkCnt)
-                elStatus.innerHTML = `Recording...${dataChunkCnt}`
+                elStatus.innerHTML = `Recording ${recType}... ${dataChunkCnt}`
                 if (saveChunks) {
                     save_chunks()
                 }
@@ -51,6 +52,7 @@
 
             function start_rs(params) {
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
+                    recType = "screen"
                     prep_mr(stream, {audioBitsPerSecond: 64000, videoBitsPerSecond: 512000})
                     elStatus.innerHTML = "Started screen recording..."
                     console.log("INFO:RecScr:Started...")
@@ -59,6 +61,7 @@
 
             function start_rd(params) {
                 navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
+                    recType = "devices"
                     prep_mr(stream)
                     elStatus.innerHTML = "Started device recording..."
                     console.log("INFO:RecDev:Started...")
@@ -67,6 +70,7 @@
 
             function start_ra(params) {
                 navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=>{
+                    recType = "audio"
                     prep_mr(stream)
                     elStatus.innerHTML = "Started audio recording..."
                     console.log("INFO:RecAud:Started...")
@@ -74,7 +78,7 @@
             }
 
             function save_chunks() {
-                console.log("INFO:SaveChunks:NumOfMediaChunks:", mediaChunks.length)
+                console.log(`INFO:SaveChunks:${recType}:NumOfMediaChunks:`, mediaChunks.length)
                 if (fileData !== null) {
                     window.URL.revokeObjectURL(fileData)
                 }
@@ -89,14 +93,14 @@
                 dl.href = fileData
                 dl.innerHTML = "Save captured media"
                 window.document.body.appendChild(dl)
-                elStatus.innerHTML = "Captured data prepared for saving..."
+                elStatus.innerHTML = `Captured ${recType} data prepared for saving...`
             }
 
             function stop_rec(params) {
                 if (mediaRec !== null) {
                     mediaRec.stop()
                     mediaRec = null
-                    elStatus.innerHTML = "Stopped recording..."
+                    elStatus.innerHTML = `Stopped recording ${recType}...`
                     console.log("INFO:RecStop:Stopped recording...")
                     saveChunks = true
                 } else {
