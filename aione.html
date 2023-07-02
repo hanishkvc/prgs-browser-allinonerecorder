@@ -5,7 +5,7 @@
     <body>
         <h1>All in One Recorder</h1>
         <author>HanishKVC</author>
-        <version>v20230702IST2023</version>
+        <version>v20230702IST2249</version>
         <p>
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
@@ -37,13 +37,13 @@
                 }
             }
 
-            function prep_mr(stream) {
+            function prep_mr(stream, options={}) {
                 saveChunks = false
                 mediaChunks = []
                 dataChunkCnt = 0
                 theStream = stream
                 mediaFileCnt += 1
-                mediaRec = new MediaRecorder(stream)
+                mediaRec = new MediaRecorder(stream, options)
                 mediaRec.ondataavailable = got_data
                 mediaRec.start(DATACHUNK_MS)
                 startDateTime = Date.now()
@@ -51,7 +51,7 @@
 
             function start_rs(params) {
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
-                    prep_mr(stream)
+                    prep_mr(stream, {audioBitsPerSecond: 64000, videoBitsPerSecond: 512000})
                     elStatus.innerHTML = "Started screen recording..."
                     console.log("INFO:RecScr:Started...")
                 })
