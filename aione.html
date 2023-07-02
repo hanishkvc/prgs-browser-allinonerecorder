@@ -10,15 +10,30 @@
             <button id="RecStop"> Stop </button>
         </p>
         <script>
+            let theStream = null
+            let mediaRec;
+
+
             function start_rs(params) {
-                console.log("INFO:RecScr:Started...")
+                navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
+                    theStream = stream
+                    mediaRec = new MediaRecorder(stream)
+                    mediaRec.start()
+                    console.log("INFO:RecScr:Started...")
+                })
             }
 
             function start_rd(params) {
-                console.log("INFO:RecDev:Started...")
+                navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
+                    theStream = stream
+                    mediaRec = new MediaRecorder(stream)
+                    mediaRec.start()
+                    console.log("INFO:RecDev:Started...")
+                })
             }
 
             function stop_rec(params) {
+                mediaRec.stop()
                 console.log("INFO:RecStop:Stopped recording...")
             }
 
