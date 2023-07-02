@@ -18,6 +18,7 @@
             let dataChunkCnt = 0
             let fileData = null
             const DATACHUNK_MS = 30000
+            let mediaFileCnt = 0
 
             function got_data(be) {
                 mediaChunks.push(be.data)
@@ -27,6 +28,7 @@
 
             function prep_mr(stream) {
                     theStream = stream
+                    mediaFileCnt += 1
                     mediaRec = new MediaRecorder(stream)
                     mediaRec.ondataavailable = got_data
                     mediaRec.start(DATACHUNK_MS)
@@ -58,7 +60,7 @@
                     let dataBlob = new Blob(mediaChunks)
                     fileData = window.URL.createObjectURL(dataBlob)
                     let dl = document.createElement('a')
-                    dl.setAttribute('download', "captured.mkv")
+                    dl.setAttribute('download', `captured_${mediaFileCnt}`)
                     dl.href = fileData
                     dl.innerHTML = "Save captured media"
                     window.document.body.appendChild(dl)
