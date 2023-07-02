@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>All in One Recorder</title>
+    </head>
+    <body>
+        <h1>All in One Recorder</h1>
+        <p>
+            <button id="RecScr"> Record Screen </button>
+            <button id="RecDev"> Record Devices </button>
+            <button id="RecStop"> Stop </button>
+        </p>
+        <script>
+            function start_rs(params) {
+                console.log("INFO:RecScr:Started...")
+            }
+
+            function start_rd(params) {
+                console.log("INFO:RecDev:Started...")
+            }
+
+            function stop_rec(params) {
+                console.log("INFO:RecStop:Stopped recording...")
+            }
+
+            function init (params) {
+                let brs = document.getElementById("RecScr")
+                brs.onclick = start_rs
+                let brd = document.getElementById("RecDev")
+                let brstop = document.getElementById("RecStop")                
+            }
+            document.onload = init
+        </script>
+    </body>
+</html>
