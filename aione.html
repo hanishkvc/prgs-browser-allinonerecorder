@@ -9,6 +9,7 @@
         <p>
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
+            <button id="RecAud"> Record Audio </button>
             <button id="RecStop"> Stop </button>
         </p>
         <p id="Status">
@@ -58,6 +59,14 @@
                 })
             }
 
+            function start_ra(params) {
+                navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=>{
+                    prep_mr(stream)
+                    elStatus.innerHTML = "Started audio recording..."
+                    console.log("INFO:RecAud:Started...")
+                })
+            }
+
             function stop_rec(params) {
                 if (mediaRec !== null) {
                     mediaRec.stop()
@@ -87,6 +96,8 @@
                 brs.onclick = start_rs
                 let brd = document.getElementById("RecDev")
                 brd.onclick = start_rd
+                let bra = document.getElementById("RecAud")
+                bra.onclick = start_ra
                 let brstop = document.getElementById("RecStop")
                 brstop.onclick = stop_rec
                 console.log("INFO:Init:Setup UI...")
