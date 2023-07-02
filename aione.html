@@ -31,6 +31,7 @@
                 mediaChunks.push(be.data)
                 dataChunkCnt += 1
                 console.log("INFO:GotData:", dataChunkCnt)
+                elStatus.innerHTML = `Recording...${dataChunkCnt}`
                 if (saveChunks) {
                     save_chunks()
                 }
@@ -73,7 +74,7 @@
             }
 
             function save_chunks() {
-                console.log("INFO:RecStop:NumOfMediaChunks:", mediaChunks.length)
+                console.log("INFO:SaveChunks:NumOfMediaChunks:", mediaChunks.length)
                 if (fileData !== null) {
                     window.URL.revokeObjectURL(fileData)
                 }
@@ -88,6 +89,7 @@
                 dl.href = fileData
                 dl.innerHTML = "Save captured media"
                 window.document.body.appendChild(dl)
+                elStatus.innerHTML = "Captured data prepared for saving..."
             }
 
             function stop_rec(params) {
