@@ -16,6 +16,7 @@
             let mediaRec = null;
             let mediaChunks = []
             let dataChunkCnt = 0
+            let fileData = null
             const DATACHUNK_MS = 30000
 
             function got_data(be) {
@@ -51,12 +52,16 @@
                     mediaRec = null
                     console.log("INFO:RecStop:Stopped recording...")
                     console.log("INFO:RecStop:NumOfMediaChunts:", mediaChunks.length)
+                    if (fileData !== null) {
+                        window.URL.revokeObjectURL(fileData)
+                    }
                     let dataBlob = new Blob(mediaChunks)
                     fileData = window.URL.createObjectURL(dataBlob)
                     let dl = document.createElement('a')
                     dl.setAttribute('download', "captured.mkv")
                     dl.href = fileData
-                    document.body.append(dl)
+                    dl.innerHTML = "Save captured media"
+                    window.document.body.appendChild(dl)
                 }
             }
 
