@@ -15,12 +15,20 @@
             let theStream = null
             let mediaRec = null;
             let mediaChunks = []
+            let dataChunkCnt = 0
+            const DATACHUNK_MS = 30000
+
+            function got_data(be) {
+                mediaChunks.push(be.data)
+                dataChunkCnt += 1
+                console.log("INFO:GotData:", dataChunkCnt)
+            }
 
             function prep_mr(stream) {
                     theStream = stream
                     mediaRec = new MediaRecorder(stream)
-                    mediaRec.ondataavailable = (be) => mediaChunks.push(be.data)
-                    mediaRec.start()
+                    mediaRec.ondataavailable = got_data
+                    mediaRec.start(DATACHUNK_MS)
             }
 
             function start_rs(params) {
