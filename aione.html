@@ -28,6 +28,8 @@
             }
 
             function prep_mr(stream) {
+                    mediaChunks = []
+                    dataChunkCnt = 0
                     theStream = stream
                     mediaFileCnt += 1
                     mediaRec = new MediaRecorder(stream)
@@ -69,8 +71,6 @@
                     dl.href = fileData
                     dl.innerHTML = "Save captured media"
                     window.document.body.appendChild(dl)
-                    mediaChunks = []
-                    dataChunkCnt = 0
                 }
             }
 
