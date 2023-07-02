@@ -19,6 +19,7 @@
             let fileData = null
             const DATACHUNK_MS = 30000
             let mediaFileCnt = 0
+            let dl = null
 
             function got_data(be) {
                 mediaChunks.push(be.data)
@@ -59,7 +60,11 @@
                     }
                     let dataBlob = new Blob(mediaChunks)
                     fileData = window.URL.createObjectURL(dataBlob)
-                    let dl = document.createElement('a')
+                    if (dl !== null) {
+                        window.document.body.removeChild(dl)
+                    }
+                    dl = document.createElement('a')
+                    dl.id = "SaveLink"
                     dl.setAttribute('download', `captured_${mediaFileCnt}`)
                     dl.href = fileData
                     dl.innerHTML = "Save captured media"
