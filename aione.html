@@ -51,6 +51,12 @@
                     mediaRec = null
                     console.log("INFO:RecStop:Stopped recording...")
                     console.log("INFO:RecStop:NumOfMediaChunts:", mediaChunks.length)
+                    let dataBlob = new Blob(mediaChunks)
+                    fileData = window.URL.createObjectURL(dataBlob)
+                    let dl = document.createElement('a')
+                    dl.setAttribute('download', "captured.mkv")
+                    dl.href = fileData
+                    document.body.append(dl)
                 }
             }
 
