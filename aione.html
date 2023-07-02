@@ -13,30 +13,37 @@
         </p>
         <script>
             let theStream = null
-            let mediaRec;
+            let mediaRec = null;
+            let mediaChunks = []
 
+            function prep_mr(stream) {
+                    theStream = stream
+                    mediaRec = new MediaRecorder(stream)
+                    mediaRec.ondataavailable = (be) => mediaChunks.push(be.data)
+                    mediaRec.start()
+            }
 
             function start_rs(params) {
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
-                    theStream = stream
-                    mediaRec = new MediaRecorder(stream)
-                    mediaRec.start()
+                    prep_mr(stream)
                     console.log("INFO:RecScr:Started...")
                 })
             }
 
             function start_rd(params) {
                 navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
-                    theStream = stream
-                    mediaRec = new MediaRecorder(stream)
-                    mediaRec.start()
+                    prep_mr(stream)
                     console.log("INFO:RecDev:Started...")
                 })
             }
 
             function stop_rec(params) {
-                mediaRec.stop()
-                console.log("INFO:RecStop:Stopped recording...")
+                if (mediaRec !== null) {
+                    mediaRec.stop()
+                    mediaRec = null
+                    console.log("INFO:RecStop:Stopped recording...")
+                    console.log("INFO:RecStop:NumOfMediaChunts:", mediaChunks.length)
+                }
             }
 
             function init (params) {
