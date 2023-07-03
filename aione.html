@@ -30,6 +30,9 @@
             let recType = "???"
 
 
+            /**
+             * Generate a number containing the parts of date time specified in the string template.
+             */
             function get_datetime(tmpl) {
                 let val = 0
                 let dt = new Date()
@@ -40,7 +43,7 @@
                             val = (val*10000) + dt.getFullYear()
                             break;
                         case 'M':
-                            val = (val*100) + dt.getMonth()
+                            val = (val*100) + (dt.getMonth()+1)
                             break;
                         case 'D':
                             val = (val*100) + dt.getDate()
@@ -61,6 +64,9 @@
                 return val
             }
 
+            /**
+             * Handle the captured data chunks, as and when provided by the system/browser.
+             */
             function got_data(be) {
                 mediaChunks.push(be.data)
                 dataChunkCnt += 1
@@ -71,6 +77,9 @@
                 }
             }
 
+            /**
+             * Prepare and start the media recorder
+             */
             function prep_mr(stream, options={}) {
                 saveChunks = false
                 mediaChunks = []
