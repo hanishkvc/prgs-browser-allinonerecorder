@@ -1,10 +1,11 @@
 <html>
     <head>
         <title>All in One Recorder</title>
+        <author>HanishKVC</author>
+        <license>GPL</license>
     </head>
     <body>
         <h1>All in One Recorder</h1>
-        <author>HanishKVC</author>
         <version>v20230702IST2255</version>
         <p>
             <button id="RecScr"> Record Screen </button>
@@ -24,9 +25,41 @@
             let mediaFileCnt = 0
             let dl = null
             let elStatus = null
-            let startDateTime = 3210
+            let startDateTime = 194708150000
             let saveChunks = false
             let recType = "???"
+
+
+            function get_datetime(tmpl) {
+                let val = 0
+                let dt = new Date()
+                for (i in tmpl) {
+                    let t = tmpl[i]
+                    switch (t) {
+                        case 'Y':
+                            val = (val*10000) + dt.getFullYear()
+                            break;
+                        case 'M':
+                            val = (val*100) + dt.getMonth()
+                            break;
+                        case 'D':
+                            val = (val*100) + dt.getDate()
+                            break;
+                        case 'h':
+                            val = (val*100) + dt.getHours()
+                            break;
+                        case 'm':
+                            val = (val*100) + dt.getMinutes()
+                            break;
+                        case 's':
+                            val = (val*100) + dt.getSeconds()
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return val
+            }
 
             function got_data(be) {
                 mediaChunks.push(be.data)
@@ -47,7 +80,7 @@
                 mediaRec = new MediaRecorder(stream, options)
                 mediaRec.ondataavailable = got_data
                 mediaRec.start(DATACHUNK_MS)
-                startDateTime = Date.now()
+                startDateTime = get_datetime("YMDhms")
             }
 
             function start_rs(params) {
