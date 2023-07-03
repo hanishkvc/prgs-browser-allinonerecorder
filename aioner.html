@@ -14,13 +14,12 @@
             <button id="RecStop"> Stop </button>
         </div>
         <div style="margin-block: 1vh;">
-            <datalist id="QualityDL">
-                <option>{"q":"high", "v":2560000, "a":128000}</option>
-                <option>{"q":"mid",  "v":1280000, "a":96000}</option>
-                <option>{"q":"low",  "v":512000,  "a":64000}</option>
-            </datalist>
-            Quality
-            <input id="RecQuality" type="text" list="QualityDL">
+            <label for="RecQuality">Quality</label>
+            <select id="RecQuality">
+                <option value='{"q":"high", "v":2560000, "a":128000}'>high</option>
+                <option value='{"q":"mid",  "v":1280000, "a":96000}' selected>mid</option>
+                <option value='{"q":"low",  "v":512000,  "a":64000}'>low</option>
+            </select>
         </div>
         <p id="Status">
         </p>
