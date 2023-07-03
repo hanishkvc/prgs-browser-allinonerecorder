@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>All in One Recorder</h1>
-        <version>v20230703IST1408</version>
+        <version>v20230703IST1814</version>
         <div style="margin-block: 1vh;">
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
@@ -38,7 +38,6 @@
             let dl = null
             let elStatus = null
             let startDateTime = 194708150000
-            let saveChunks = false
             let recType = "???"
             /** @type {HTMLInputElement} */
             let inRecQual = null
@@ -87,16 +86,16 @@
                 dataChunkCnt += 1
                 console.log("INFO:GotData:", dataChunkCnt)
                 elStatus.innerHTML = `Recording ${recType}... ${dataChunkCnt}`
-                if (saveChunks) {
-                    save_chunks()
-                }
+            }
+
+            function stopped_capture() {
+                save_chunks()
             }
 
             /**
              * Prepare and start the media recorder
              */
             function prep_mr(stream, options={}) {
-                saveChunks = false
                 mediaChunks = []
                 dataChunkCnt = 0
                 theStream = stream
@@ -104,6 +103,7 @@
                 console.debug("DEBUG:PrepMR:", stream, options)
                 mediaRec = new MediaRecorder(stream, options)
                 mediaRec.ondataavailable = got_data
+                mediaRec.onstop = stopped_capture
                 mediaRec.start(DATACHUNK_MS)
                 startDateTime = get_datetime("YMDhms")
                 vidPreview.srcObject = stream
@@ -185,7 +185,6 @@
                     mediaRec = null
                     elStatus.innerHTML = `Stopped recording ${recType}...`
                     console.log("INFO:RecStop:Stopped recording...")
-                    saveChunks = true
                     vidPreview.srcObject = null
                     let tracks =  /** @type {MediaStream} */(theStream).getTracks()
                     tracks.forEach((track)=>{
