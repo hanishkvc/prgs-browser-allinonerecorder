@@ -96,17 +96,22 @@
              * Prepare and start the media recorder
              */
             function prep_mr(stream, options={}) {
-                mediaChunks = []
-                dataChunkCnt = 0
-                theStream = stream
-                mediaFileCnt += 1
-                console.debug("DEBUG:PrepMR:", stream, options)
-                mediaRec = new MediaRecorder(stream, options)
-                mediaRec.ondataavailable = got_data
-                mediaRec.onstop = stopped_capture
-                mediaRec.start(DATACHUNK_MS)
-                startDateTime = get_datetime("YMDhms")
-                vidPreview.srcObject = stream
+                try {
+                    mediaChunks = []
+                    dataChunkCnt = 0
+                    theStream = stream
+                    mediaFileCnt += 1
+                    console.debug("DEBUG:PrepMR:", stream, options)
+                    mediaRec = new MediaRecorder(stream, options)
+                    mediaRec.ondataavailable = got_data
+                    mediaRec.onstop = stopped_capture
+                    mediaRec.start(DATACHUNK_MS)
+                    startDateTime = get_datetime("YMDhms")
+                    vidPreview.srcObject = stream
+                } catch (err) {
+                    elStatus.innerHTML = `ERRR:PrepMR:${err}`
+                    console.error(elStatus.innerHTML)
+                }
             }
 
             function options_recqual(options={}) {
