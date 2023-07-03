@@ -17,8 +17,9 @@
             <label for="RecQuality">Quality</label>
             <select id="RecQuality">
                 <option value='{"q":"high", "v":2560000, "a":128000}'>high</option>
-                <option value='{"q":"mid",  "v":1280000, "a":96000}' selected>mid</option>
+                <option value='{"q":"mid",  "v":1280000, "a":96000}'>mid</option>
                 <option value='{"q":"low",  "v":512000,  "a":64000}'>low</option>
+                <option value='{"q":"default"}' selected>default</option>
             </select>
         </div>
         <p id="Status">
@@ -104,13 +105,17 @@
             }
 
             function options_recqual(options={}) {
-                let userQual = { 'v': 1280000, 'a': 96000 }
+                let userQual = {}
                 console.debug("DEBUG:OptsRQ:", inRecQual.value)
                 if (inRecQual.value.trim() !== "") {
                     userQual = JSON.parse(inRecQual.value)
                 }
-                options['videoBitsPerSecond'] = userQual['v']
-                options['audioBitsPerSecond'] = userQual['a']
+                if (userQual['v'] !== undefined) {
+                    options['videoBitsPerSecond'] = userQual['v']
+                }
+                if (userQual['a'] !== undefined) {
+                    options['audioBitsPerSecond'] = userQual['a']
+                }
                 return options
             }
 
