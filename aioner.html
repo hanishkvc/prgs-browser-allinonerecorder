@@ -7,12 +7,21 @@
     <body>
         <h1>All in One Recorder</h1>
         <version>v20230703IST0826</version>
-        <p>
+        <div style="margin-block: 1vh;">
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
             <button id="RecAud"> Record Audio </button>
             <button id="RecStop"> Stop </button>
-        </p>
+        </div>
+        <div style="margin-block: 1vh;">
+            <datalist id="QualityDL">
+                <option>{'q':'high', 'v':2560000, 'a':128000}</option>
+                <option>{'q':'mid',  'v':1280000, 'a':96000}</option>
+                <option>{'q':'low',  'v':512000,  'a':64000}</option>
+            </datalist>
+            Quality
+            <input id="RecQuality" type="text" list="QualityDL">
+        </div>
         <p id="Status">
         </p>
         <script>
@@ -28,6 +37,8 @@
             let startDateTime = 194708150000
             let saveChunks = false
             let recType = "???"
+            /** @type {HTMLInputElement} */
+            let inRecQual = null
 
 
             /**
@@ -86,16 +97,28 @@
                 dataChunkCnt = 0
                 theStream = stream
                 mediaFileCnt += 1
+                console.debug("DEBUG:PrepMR:", stream, options)
                 mediaRec = new MediaRecorder(stream, options)
                 mediaRec.ondataavailable = got_data
                 mediaRec.start(DATACHUNK_MS)
                 startDateTime = get_datetime("YMDhms")
             }
 
+            function options_recqual(options={}) {
+                let userQual = { 'v': 1280000, 'a': 96000 }
+                console.debug("DEBUG:OptsRQ:", inRecQual.value)
+                if (inRecQual.value.trim() !== "") {
+                    userQual = JSON.parse(inRecQual.value)
+                }
+                options['videoBitsPerSecond'] = userQual['v']
+                options['audioBitsPerSecond'] = userQual['a']
+                return options
+            }
+
             function start_rs(params) {
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
                     recType = "screen"
-                    prep_mr(stream, {audioBitsPerSecond: 64000, videoBitsPerSecond: 512000})
+                    prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started screen recording..."
                     console.log("INFO:RecScr:Started...")
                 })
@@ -104,7 +127,7 @@
             function start_rd(params) {
                 navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
                     recType = "devices"
-                    prep_mr(stream)
+                    prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started device recording..."
                     console.log("INFO:RecDev:Started...")
                 })
@@ -113,7 +136,7 @@
             function start_ra(params) {
                 navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=>{
                     recType = "audio"
-                    prep_mr(stream)
+                    prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started audio recording..."
                     console.log("INFO:RecAud:Started...")
                 })
@@ -162,6 +185,7 @@
                 brstop.onclick = stop_rec
                 console.log("INFO:Init:Setup UI...")
                 elStatus = document.getElementById("Status")
+                inRecQual = document.getElementById("RecQuality")
             }
             window.onload = init
         </script>
