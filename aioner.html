@@ -24,6 +24,9 @@
         </div>
         <p id="Status">
         </p>
+        <div>
+            <video id="RecPreview" autoplay muted playsinline width="640" height="352"></video>
+        </div>
         <script>
             let theStream = null
             let mediaRec = null;
@@ -39,6 +42,7 @@
             let recType = "???"
             /** @type {HTMLInputElement} */
             let inRecQual = null
+            let vidPreview = null
 
 
             /**
@@ -102,6 +106,7 @@
                 mediaRec.ondataavailable = got_data
                 mediaRec.start(DATACHUNK_MS)
                 startDateTime = get_datetime("YMDhms")
+                vidPreview.srcObject = stream
             }
 
             function options_recqual(options={}) {
@@ -172,6 +177,7 @@
                     elStatus.innerHTML = `Stopped recording ${recType}...`
                     console.log("INFO:RecStop:Stopped recording...")
                     saveChunks = true
+                    vidPreview.srcObject = null
                 } else {
                     elStatus.innerHTML = "Nothing to stop..."
                     console.log("INFO:RecStop:Nothing to stop...")
@@ -190,6 +196,7 @@
                 console.log("INFO:Init:Setup UI...")
                 elStatus = document.getElementById("Status")
                 inRecQual = document.getElementById("RecQuality")
+                vidPreview = document.getElementById("RecPreview")
             }
             window.onload = init
         </script>
