@@ -178,6 +178,10 @@
                     console.log("INFO:RecStop:Stopped recording...")
                     saveChunks = true
                     vidPreview.srcObject = null
+                    let tracks =  /** @type {MediaStream} */(theStream).getTracks()
+                    tracks.forEach((track)=>{
+                        track.stop()
+                    })
                 } else {
                     elStatus.innerHTML = "Nothing to stop..."
                     console.log("INFO:RecStop:Nothing to stop...")
