@@ -118,7 +118,7 @@
                 vidPreview.srcObject = stream
                 elInfoTracks.innerHTML = ""
                 stream.getTracks().forEach((track)=>{
-                    let sInfo = `<p>* ${track.kind}:${track.label}:${track.enabled}:${track.contentHint}</p>`
+                    let sInfo = `<p>* ${track.kind}:${track.enabled}:${track.label}:${track.contentHint}</p>`
                     elInfoTracks.innerHTML += sInfo
                     console.debug("INFO:PrepMR:",sInfo)
                 })
