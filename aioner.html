@@ -25,9 +25,9 @@
 
         <div style="margin-block: 1vh;">
             <hr>
-            Status:
+            [[Status]]
             <p id="Status"></p>
-            Tracks:
+            [[Tracks]]
             <p id="InfoTracks"></p>
             <hr>
         </div>
@@ -221,11 +221,12 @@
                 bra.onclick = start_ra
                 let brstop = document.getElementById("RecStop")
                 brstop.onclick = stop_rec
-                console.log("INFO:Init:Setup UI...")
                 elStatus = document.getElementById("Status")
                 inRecQual = document.getElementById("RecQuality")
                 vidPreview = document.getElementById("RecPreview")
                 elInfoTracks = document.getElementById("InfoTracks")
+                console.log("INFO:Init:Setup UI...")
+                elStatus.innerHTML = "Setup UI..."
             }
             window.onload = init
         </script>
