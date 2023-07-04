@@ -189,7 +189,7 @@
                 dl.id = "SaveLink"
                 dl.setAttribute('download', `captured_${startDateTime}_${mediaFileCnt}`)
                 dl.href = fileData
-                dl.innerHTML = "Save captured media"
+                dl.innerHTML = "Save last capture"
                 window.document.body.appendChild(dl)
                 elStatus.innerHTML = `Captured ${recType} data prepared for saving...`
                 console.log("INFO:SaveChunks:", elStatus.innerHTML)
