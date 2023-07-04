@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>All in One Recorder</h1>
-        <version>v20230704IST1123</version>
+        <version>v20230704IST1212</version>
         <div style="margin-block: 1vh;">
             <button id="RecScr" title="Record screen and or audio playback"> Record Screen </button>
             <button id="RecDev" title="Record camera and or mic"> Record Devices </button>
@@ -16,7 +16,7 @@
         </div>
         <div style="margin-block: 1vh;">
             <label for="RecQuality">Quality</label>
-            <select id="RecQuality" title="Control the quality of capture">
+            <select id="RecQuality" title="Control the quality of capture/recording">
                 <option value='{"q":"high", "v":2560000, "a":128000}'>high</option>
                 <option value='{"q":"mid",  "v":1280000, "a":96000}'>mid</option>
                 <option value='{"q":"low",  "v":512000,  "a":64000}'>low</option>
@@ -37,6 +37,7 @@
         </div>
         <script>
             let theStream = null
+            let theStreams = []
             let mediaRec = null;
             let mediaChunks = []
             let dataChunkCnt = 0
@@ -147,6 +148,7 @@
             function start_rs(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
+                    theStreams.push(stream)
                     recType = "screen"
                     prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started screen recording..."
@@ -161,6 +163,7 @@
             function start_rd(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
+                    theStreams.push(stream)
                     recType = "devices"
                     prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started device recording..."
@@ -175,6 +178,7 @@
             function start_ra(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=>{
+                    theStreams.push(stream)
                     recType = "audio"
                     prep_mr(stream, options_recqual())
                     elStatus.innerHTML = "Started audio recording..."
@@ -189,7 +193,9 @@
             function start_rsm_merged(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
+                    theStreams.push(stream1)
                     navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
+                        theStreams.push(stream2)
                         recType = "screen+mic"
                         let mstream = new MediaStream()
                         if (stream1.getVideoTracks().length > 0) {
@@ -237,7 +243,9 @@
             function start_rsm_lr(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
+                    theStreams.push(stream1)
                     navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
+                        theStreams.push(stream2)
                         recType = "screen+mic"
                         let mstream = new MediaStream()
                         if (stream1.getVideoTracks().length > 0) {
@@ -311,9 +319,11 @@
                     elStatus.innerHTML = `Stopped recording ${recType}...`
                     console.log("INFO:RecStop:Stopped recording...")
                     vidPreview.srcObject = null
-                    let tracks =  /** @type {MediaStream} */(theStream).getTracks()
-                    tracks.forEach((track)=>{
-                        track.stop()
+                    theStreams.forEach((stream)=>{
+                        let tracks =  /** @type {MediaStream} */(stream).getTracks()
+                        tracks.forEach((track)=>{
+                            track.stop()
+                        })
                     })
                 } else {
                     elStatus.innerHTML = "Nothing to stop..."
