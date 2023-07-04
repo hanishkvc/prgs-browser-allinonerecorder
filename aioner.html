@@ -186,7 +186,7 @@
                 })
             }
 
-            function start_rsm(params) {
+            function start_rsm_merged(params) {
                 infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
                     navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
@@ -215,6 +215,56 @@
                         alabel +=")"
                         //amix.stream.getAudioTracks()[0].label = alabel
                         mstream.addTrack(amix.stream.getAudioTracks()[0])
+                        //mstream.getAudioTracks()[0].label = alabel
+                        //mstream.getAudioTracks()[0].contentHint = alabel
+                        infoTracksSpecial = alabel
+                        prep_mr(mstream, options_recqual())
+                        elStatus.innerHTML = "Started screen+mic recording..."
+                        console.log("INFO:RecScrMic:Started...")
+                    }).catch((reason)=>{
+                        recType = "screen(no mic)"
+                        prep_mr(stream1, options_recqual())
+                        elStatus.innerHTML = "Started screen recording...(no mic)"
+                        console.log("INFO:RecScrMic:Started...(no mic)")
+                    })
+                }).catch((reason)=>{
+                    recType = "???"
+                    elStatus.innerHTML = `ERRR:StartRSM:${reason}`
+                    console.error(elStatus.innerHTML)
+                })
+            }
+
+            function start_rsm_lr(params) {
+                infoTracksSpecial = ""
+                navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
+                    navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
+                        recType = "screen+mic"
+                        let mstream = new MediaStream()
+                        if (stream1.getVideoTracks().length > 0) {
+                            mstream.addTrack(stream1.getVideoTracks()[0])
+                        }
+                        let ax = new AudioContext()
+                        let adest = ax.createMediaStreamDestination()
+                        let alr = ax.createChannelMerger()
+                        alr.connect(adest)
+                        let alabel = "MixAudio("
+                        if (stream1.getAudioTracks().length > 0) {
+                            let a1ms = new MediaStream()
+                            a1ms.addTrack(stream1.getAudioTracks()[0])
+                            let a1src = ax.createMediaStreamSource(a1ms)
+                            a1src.connect(alr, 0, 0)
+                            alabel += `+${stream1.getAudioTracks()[0].label}`
+                        }
+                        if (stream2.getAudioTracks().length > 0) {
+                            let a2ms = new MediaStream()
+                            a2ms.addTrack(stream2.getAudioTracks()[0])
+                            let a2src = ax.createMediaStreamSource(a2ms)
+                            a2src.connect(alr, 0, 1)
+                            alabel += `+${stream2.getAudioTracks()[0].label}`
+                        }
+                        alabel +=")"
+                        //adest.stream.getAudioTracks()[0].label = alabel
+                        mstream.addTrack(adest.stream.getAudioTracks()[0])
                         //mstream.getAudioTracks()[0].label = alabel
                         //mstream.getAudioTracks()[0].contentHint = alabel
                         infoTracksSpecial = alabel
@@ -278,7 +328,7 @@
                 brd.onclick = start_rd
                 let bra = document.getElementById("RecAud")
                 bra.onclick = start_ra
-                document.getElementById("RecScrMic").onclick = start_rsm
+                document.getElementById("RecScrMic").onclick = start_rsm_lr
                 let brstop = document.getElementById("RecStop")
                 brstop.onclick = stop_rec
                 elStatus = document.getElementById("Status")
