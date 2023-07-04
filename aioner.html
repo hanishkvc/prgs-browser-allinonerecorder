@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>All in One Recorder</h1>
-        <version>v20230704IST1114</version>
+        <version>v20230704IST1123</version>
         <div style="margin-block: 1vh;">
             <button id="RecScr" title="Record screen and or audio playback"> Record Screen </button>
             <button id="RecDev" title="Record camera and or mic"> Record Devices </button>
@@ -221,6 +221,11 @@
                         prep_mr(mstream, options_recqual())
                         elStatus.innerHTML = "Started screen+mic recording..."
                         console.log("INFO:RecScrMic:Started...")
+                    }).catch((reason)=>{
+                        recType = "screen(no mic)"
+                        prep_mr(stream1, options_recqual())
+                        elStatus.innerHTML = "Started screen recording...(no mic)"
+                        console.log("INFO:RecScrMic:Started...(no mic)")
                     })
                 }).catch((reason)=>{
                     recType = "???"
