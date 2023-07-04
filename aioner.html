@@ -226,16 +226,16 @@
                         infoTracksSpecial = alabel
                         prep_mr(mstream, options_recqual())
                         elStatus.innerHTML = "Started screen+mic recording..."
-                        console.log("INFO:RecScrMic:Started...")
+                        console.log("INFO:RecScrMicMrgd:Started...")
                     }).catch((reason)=>{
                         recType = "screen(no mic)"
                         prep_mr(stream1, options_recqual())
                         elStatus.innerHTML = "Started screen recording...(no mic)"
-                        console.log("INFO:RecScrMic:Started...(no mic)")
+                        console.log("INFO:RecScrMicMrgd:Started...(no mic)")
                     })
                 }).catch((reason)=>{
                     recType = "???"
-                    elStatus.innerHTML = `ERRR:StartRSM:${reason}`
+                    elStatus.innerHTML = `ERRR:StartRSMMrgd:${reason}`
                     console.error(elStatus.innerHTML)
                 })
             }
@@ -278,16 +278,16 @@
                         infoTracksSpecial = alabel
                         prep_mr(mstream, options_recqual())
                         elStatus.innerHTML = "Started screen+mic recording..."
-                        console.log("INFO:RecScrMic:Started...")
+                        console.log("INFO:RecScrMicLR:Started...")
                     }).catch((reason)=>{
                         recType = "screen(no mic)"
                         prep_mr(stream1, options_recqual())
                         elStatus.innerHTML = "Started screen recording...(no mic)"
-                        console.log("INFO:RecScrMic:Started...(no mic)")
+                        console.log("INFO:RecScrMicLR:Started...(no mic)")
                     })
                 }).catch((reason)=>{
                     recType = "???"
-                    elStatus.innerHTML = `ERRR:StartRSM:${reason}`
+                    elStatus.innerHTML = `ERRR:StartRSMLR:${reason}`
                     console.error(elStatus.innerHTML)
                 })
             }
