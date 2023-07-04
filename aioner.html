@@ -51,6 +51,7 @@
             let inRecQual = null
             let vidPreview = null
             let elInfoTracks = null
+            let infoTracksSpecial = ""
 
 
             /**
@@ -123,6 +124,9 @@
                     elInfoTracks.innerHTML += sInfo
                     console.debug("INFO:PrepMR:",sInfo)
                 })
+                if (infoTracksSpecial.trim() !== "") {
+                    elInfoTracks.innerHTML += `<p>* ${infoTracksSpecial}</p>`
+                }
             }
 
             function options_recqual(options={}) {
@@ -141,6 +145,7 @@
             }
 
             function start_rs(params) {
+                infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream)=>{
                     recType = "screen"
                     prep_mr(stream, options_recqual())
@@ -154,6 +159,7 @@
             }
 
             function start_rd(params) {
+                infoTracksSpecial = ""
                 navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream)=>{
                     recType = "devices"
                     prep_mr(stream, options_recqual())
@@ -167,6 +173,7 @@
             }
 
             function start_ra(params) {
+                infoTracksSpecial = ""
                 navigator.mediaDevices.getUserMedia({audio: true}).then((stream)=>{
                     recType = "audio"
                     prep_mr(stream, options_recqual())
@@ -180,6 +187,7 @@
             }
 
             function start_rsm(params) {
+                infoTracksSpecial = ""
                 navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
                     navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
                         recType = "screen+mic"
@@ -189,7 +197,7 @@
                         }
                         let ax = new AudioContext()
                         let amix = ax.createMediaStreamDestination()
-                        let alabel = "Mix"
+                        let alabel = "MixAudio("
                         if (stream1.getAudioTracks().length > 0) {
                             let a1ms = new MediaStream()
                             a1ms.addTrack(stream1.getAudioTracks()[0])
@@ -204,9 +212,12 @@
                             a2src.connect(amix)
                             alabel += `+${stream2.getAudioTracks()[0].label}`
                         }
-                        amix.stream.getAudioTracks()[0].label = alabel
+                        alabel +=")"
+                        //amix.stream.getAudioTracks()[0].label = alabel
                         mstream.addTrack(amix.stream.getAudioTracks()[0])
-                        mstream.getAudioTracks()[0].contentHint = alabel
+                        //mstream.getAudioTracks()[0].label = alabel
+                        //mstream.getAudioTracks()[0].contentHint = alabel
+                        infoTracksSpecial = alabel
                         prep_mr(mstream, options_recqual())
                         elStatus.innerHTML = "Started screen+mic recording..."
                         console.log("INFO:RecScrMic:Started...")
