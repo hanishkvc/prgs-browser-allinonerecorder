@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>All in One Recorder</h1>
-        <version>v20230703IST1814</version>
+        <version>v20230704IST0952</version>
         <div style="margin-block: 1vh;">
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
@@ -22,8 +22,15 @@
                 <option value='{"q":"default"}' selected>default</option>
             </select>
         </div>
-        <p id="Status">
-        </p>
+
+        <div style="margin-block: 1vh;">
+            <hr>
+            Status:
+            <p id="Status"></p>
+            Tracks:
+            <p id="InfoTracks"></p>
+            <hr>
+        </div>
         <div>
             <video id="RecPreview" autoplay muted playsinline width="256"></video>
         </div>
@@ -42,6 +49,7 @@
             /** @type {HTMLInputElement} */
             let inRecQual = null
             let vidPreview = null
+            let elInfoTracks = null
 
 
             /**
@@ -94,6 +102,7 @@
 
             /**
              * Prepare and start the media recorder
+             * @param {MediaStream} stream
              */
             function prep_mr(stream, options={}) {
                 mediaChunks = []
@@ -107,6 +116,12 @@
                 mediaRec.start(DATACHUNK_MS)
                 startDateTime = get_datetime("YMDhms")
                 vidPreview.srcObject = stream
+                elInfoTracks.innerHTML = ""
+                stream.getTracks().forEach((track)=>{
+                    let sInfo = `<p>* ${track.kind}:${track.label}:${track.enabled}:${track.contentHint}</p>`
+                    elInfoTracks.innerHTML += sInfo
+                    console.debug("INFO:PrepMR:",sInfo)
+                })
             }
 
             function options_recqual(options={}) {
@@ -177,6 +192,7 @@
                 dl.innerHTML = "Save captured media"
                 window.document.body.appendChild(dl)
                 elStatus.innerHTML = `Captured ${recType} data prepared for saving...`
+                console.log("INFO:SaveChunks:", elStatus.innerHTML)
             }
 
             function stop_rec(params) {
@@ -209,6 +225,7 @@
                 elStatus = document.getElementById("Status")
                 inRecQual = document.getElementById("RecQuality")
                 vidPreview = document.getElementById("RecPreview")
+                elInfoTracks = document.getElementById("InfoTracks")
             }
             window.onload = init
         </script>
