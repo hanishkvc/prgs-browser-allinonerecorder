@@ -11,6 +11,7 @@
             <button id="RecScr"> Record Screen </button>
             <button id="RecDev"> Record Devices </button>
             <button id="RecAud"> Record Audio </button>
+            <button id="RecScrMic"> Record Screen + Mic </button>
             <button id="RecStop"> Stop </button>
         </div>
         <div style="margin-block: 1vh;">
@@ -146,6 +147,7 @@
                     elStatus.innerHTML = "Started screen recording..."
                     console.log("INFO:RecScr:Started...")
                 }).catch((reason)=>{
+                    recType = "???"
                     elStatus.innerHTML = `ERRR:StartRS:${reason}`
                     console.error(elStatus.innerHTML)
                 })
@@ -158,6 +160,7 @@
                     elStatus.innerHTML = "Started device recording..."
                     console.log("INFO:RecDev:Started...")
                 }).catch((reason)=>{
+                    recType = "???"
                     elStatus.innerHTML = `ERRR:StartRD:${reason}`
                     console.error(elStatus.innerHTML)
                 })
@@ -170,7 +173,24 @@
                     elStatus.innerHTML = "Started audio recording..."
                     console.log("INFO:RecAud:Started...")
                 }).catch((reason)=>{
+                    recType = "???"
                     elStatus.innerHTML = `ERRR:StartRA:${reason}`
+                    console.error(elStatus.innerHTML)
+                })
+            }
+
+            function start_rsm(params) {
+                navigator.mediaDevices.getDisplayMedia({audio: true, video: true}).then((stream1)=>{
+                    navigator.mediaDevices.getUserMedia({audio:true}).then((stream2)=>{
+                        recType = "screen+mic"
+                        stream1.addTrack(stream2.getAudioTracks()[0])
+                        prep_mr(stream1, options_recqual())
+                        elStatus.innerHTML = "Started screen+mic recording..."
+                        console.log("INFO:RecScrMic:Started...")
+                    })
+                }).catch((reason)=>{
+                    recType = "???"
+                    elStatus.innerHTML = `ERRR:StartRSM:${reason}`
                     console.error(elStatus.innerHTML)
                 })
             }
@@ -219,6 +239,7 @@
                 brd.onclick = start_rd
                 let bra = document.getElementById("RecAud")
                 bra.onclick = start_ra
+                document.getElementById("RecScrMic").onclick = start_rsm
                 let brstop = document.getElementById("RecStop")
                 brstop.onclick = stop_rec
                 elStatus = document.getElementById("Status")
